@@ -1,0 +1,133 @@
+<!--pages/index/index.wxml-->
+<view class="page">
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <image src="/images/icon/search.png" class="search-icon"></image>
+    <input 
+      type="text" 
+      placeholder="搜索密码、账号、网站..."
+      bindinput="onSearchInput"
+      value="{{searchValue}}"
+    />
+    <image 
+      wx:if="{{searchValue}}" 
+      src="/images/icon/close.png" 
+      class="close-icon"
+      bindtap="onClearSearch"
+    ></image>
+  </view>
+
+  <!-- 搜索结果展示 -->
+  <view wx:if="{{searchValue}}" class="search-results">
+    <view wx:if="{{searchResults.length > 0}}">
+      <view class="card-header p-16">搜索结果 ({{searchResults.length}})</view>
+      <view class="list">
+        <view 
+          wx:for="{{searchResults}}" 
+          wx:key="id" 
+          class="list-item"
+          data-id="{{item.id}}"
+          bindtap="goToDetail"
+        >
+          <view class="list-item-left">
+            <view class="list-item-title">{{item.name}}</view>
+            <view class="list-item-desc">{{item.username}}</view>
+          </view>
+          <view class="list-item-right">
+            <text class="badge badge-primary">{{item.category}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="empty-state">
+      <text class="empty-state-icon">🔍</text>
+      <text class="empty-state-text">没有找到匹配的结果</text>
+    </view>
+  </view>
+
+  <!-- 首页内容 -->
+  <view wx:else>
+    <!-- 安全概览卡片 -->
+    <view class="card">
+      <view class="card-header">安全概览</view>
+      <view class="overview-grid">
+        <view class="overview-item">
+          <view class="overview-value">{{passwordCount}}</view>
+          <view class="overview-label">密码总数</view>
+        </view>
+        <view class="overview-item">
+          <view class="overview-value" style="color: #27AE60;">{{securityScore}}</view>
+          <view class="overview-label">安全评分</view>
+        </view>
+        <view class="overview-item">
+          <view class="overview-value" style="color: #f39c12;">{{weakPasswordCount}}</view>
+          <view class="overview-label">弱密码</view>
+        </view>
+        <view class="overview-item">
+          <view class="overview-value" style="color: #e74c3c;">{{duplicatePasswordCount}}</view>
+          <view class="overview-label">重复密码</view>
+        </view>
+      </view>
+      <view class="overview-action">
+        <button class="btn btn-primary btn-block" bindtap="goToSecurity">
+          查看详细安全报告
+        </button>
+      </view>
+    </view>
+
+    <!-- 分类展示 -->
+    <view class="card">
+      <view class="card-header">按分类查看</view>
+      <view class="category-grid">
+        <view 
+          wx:for="{{categories}}" 
+          wx:key="id"
+          class="category-item"
+          bindtap="filterByCategory"
+          data-category="{{item.id}}"
+        >
+          <view class="category-icon" style="background-color: {{item.color}};">{{item.icon}}</view>
+          <view class="category-name">{{item.name}}</view>
+          <view class="category-count">{{item.count}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最近访问记录 -->
+    <view class="card" wx:if="{{recentList.length > 0}}">
+      <view class="card-header">
+        <view style="display: flex; justify-content: space-between; align-items: center;">
+          <text>最近访问</text>
+          <text class="text-muted" style="font-size: 12px;">共 {{recentList.length}} 条</text>
+        </view>
+      </view>
+      <view class="list">
+        <view 
+          wx:for="{{recentList}}" 
+          wx:key="id"
+          class="list-item"
+          data-id="{{item.id}}"
+          bindtap="goToDetail"
+        >
+          <view class="list-item-left">
+            <view class="list-item-title">{{item.name}}</view>
+            <view class="list-item-desc">{{item.username}} · {{formatTime(item.lastViewTime)}}</view>
+          </view>
+          <view class="list-item-right">
+            <image src="/images/icon/arrow-right.png" class="arrow-icon"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态提示 -->
+    <view wx:if="{{passwordCount === 0}}" class="empty-state">
+      <text class="empty-state-icon">🔐</text>
+      <text class="empty-state-text">还没有保存任何密码</text>
+      <text class="empty-state-text" style="font-size: 12px; color: #ccc; margin-top: 8px;">点击下面的「新增」按钮开始添加</text>
+    </view>
+
+    <!-- 底部空白 -->
+    <view style="height: 40px;"></view>
+  </view>
+</view>
