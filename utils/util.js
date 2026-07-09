@@ -1,25 +1,21 @@
-/**
- * 工具函数模块
- */
+// utils/util.js
 
 /**
  * 格式化日期
  * @param {string|Date} date - 日期
- * @param {string} format - 格式化格式，默认 'YYYY-MM-DD HH:mm'
+ * @param {string} format - 格式
+ * @returns {string} 格式化后的日期
  */
 function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
   if (!date) return '';
   
-  if (typeof date === 'string') {
-    date = new Date(date);
-  }
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
 
   return format
     .replace('YYYY', year)
@@ -31,198 +27,54 @@ function formatDate(date, format = 'YYYY-MM-DD HH:mm') {
 }
 
 /**
- * 计算距离现在的时间差
- * @param {string|Date} date - 日期
- */
-function getTimeDistance(date) {
-  if (!date) return '';
-
-  if (typeof date === 'string') {
-    date = new Date(date);
-  }
-
-  const now = new Date();
-  const diffMs = now - date;
-  const diffSeconds = Math.floor(diffMs / 1000);
-  const diffMinutes = Math.floor(diffSeconds / 60);
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
-
-  if (diffSeconds < 60) {
-    return '刚刚';
-  } else if (diffMinutes < 60) {
-    return `${diffMinutes}分钟前`;
-  } else if (diffHours < 24) {
-    return `${diffHours}小时前`;
-  } else if (diffDays < 7) {
-    return `${diffDays}天前`;
-  } else if (diffDays < 30) {
-    return `${Math.floor(diffDays / 7)}周前`;
-  } else {
-    return formatDate(date, 'YYYY-MM-DD');
-  }
-}
-
-/**
- * 复制到剪贴板
- * @param {string} text - 要复制的文本
- */
-function copyToClipboard(text) {
-  return new Promise((resolve, reject) => {
-    wx.setClipboardData({
-      data: text,
-      success() {
-        wx.showToast({
-          title: '已复制',
-          icon: 'success',
-          duration: 1500
-        });
-        resolve();
-      },
-      fail() {
-        wx.showToast({
-          title: '复制失败',
-          icon: 'none',
-          duration: 1500
-        });
-        reject();
-      }
-    });
-  });
-}
-
-/**
- * 显示确认对话框
- * @param {string} title - 标题
- * @param {string} content - 内容
- */
-function showConfirm(title, content) {
-  return new Promise((resolve) => {
-    wx.showModal({
-      title: title,
-      content: content,
-      success(res) {
-        resolve(res.confirm);
-      }
-    });
-  });
-}
-
-/**
- * 显示加载提示
- * @param {string} title - 提示文本
- */
-function showLoading(title = '加载中...') {
-  wx.showLoading({
-    title: title,
-    mask: true
-  });
-}
-
-/**
- * 隐藏加载提示
- */
-function hideLoading() {
-  wx.hideLoading();
-}
-
-/**
- * 显示提示
- * @param {string} title - 提示文本
- * @param {string} icon - 图标类型: success, error, loading, none
- */
-function showToast(title, icon = 'none') {
-  wx.showToast({
-    title: title,
-    icon: icon,
-    duration: 1500
-  });
-}
-
-/**
- * 检测密码强度
+ * 检查密码强度
  * @param {string} password - 密码
+ * @returns {object} 强度信息
  */
 function checkPasswordStrength(password) {
+  let score = 0;
+  let level = '弱';
+
   if (!password) {
-    return { score: 0, level: '无', message: '密码为空' };
+    return { score: 0, level: '弱' };
   }
 
-  let score = 0;
-  const length = password.length;
+  // 长度检查
+  if (password.length >= 8) score += 20;
+  if (password.length >= 12) score += 20;
 
-  // 长度检测
-  if (length >= 8) score += 20;
-  if (length >= 12) score += 20;
-  if (length >= 16) score += 10;
+  // 字符类型检查
+  if (/[a-z]/.test(password)) score += 15; // 小写字母
+  if (/[A-Z]/.test(password)) score += 15; // 大写字母
+  if (/[0-9]/.test(password)) score += 15; // 数字
+  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]/.test(password)) score += 15; // 特殊字符
 
-  // 字符多样性
-  if (/[a-z]/.test(password)) score += 15;
-  if (/[A-Z]/.test(password)) score += 15;
-  if (/[0-9]/.test(password)) score += 15;
-  if (/[^a-zA-Z0-9]/.test(password)) score += 15;
-
-  let level = '弱';
-  let message = '密码过于简单';
-
+  // 确定等级
   if (score >= 80) {
     level = '强';
-    message = '密码强度强';
   } else if (score >= 60) {
     level = '中';
-    message = '密码强度中等';
-  } else if (score >= 40) {
-    level = '较弱';
-    message = '建议增加密码复杂度';
+  } else {
+    level = '弱';
   }
 
-  return { score, level, message };
+  return { score: Math.min(score, 100), level };
 }
 
 /**
- * 检测是否为弱密码
+ * 判断是否为弱密码
  * @param {string} password - 密码
+ * @returns {boolean}
  */
 function isWeakPassword(password) {
-  if (!password) return true;
-  
-  // 密码长度小于8位
-  if (password.length < 8) return true;
-
-  // 简单数字密码
-  if (/^\d+$/.test(password)) return true;
-
-  // 简单字母密码
-  if (/^[a-zA-Z]+$/.test(password)) return true;
-
-  // 连续数字或字母
-  const seq = '0123456789abcdefghijklmnopqrstuvwxyz';
-  for (let i = 0; i < seq.length - 2; i++) {
-    if (password.includes(seq.substr(i, 3))) return true;
-  }
-
-  return false;
+  const strength = checkPasswordStrength(password);
+  return strength.score < 60;
 }
 
 /**
- * 计算两个日期相差的天数
- * @param {Date|string} date - 日期
- */
-function getDaysDiff(date) {
-  if (!date) return 0;
-
-  if (typeof date === 'string') {
-    date = new Date(date);
-  }
-
-  const now = new Date();
-  const diffMs = now - date;
-  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
-}
-
-/**
- * 获取分类显示名称
- * @param {string} category - 分类
+ * 获取分类名称
+ * @param {string} category - 分类代码
+ * @returns {string} 分类名称
  */
 function getCategoryName(category) {
   const categoryMap = {
@@ -237,7 +89,8 @@ function getCategoryName(category) {
 
 /**
  * 获取分类颜色
- * @param {string} category - 分类
+ * @param {string} category - 分类代码
+ * @returns {string} 颜色值
  */
 function getCategoryColor(category) {
   const colorMap = {
@@ -247,20 +100,118 @@ function getCategoryColor(category) {
     'finance': '#27AE60',
     'other': '#95a5a6'
   };
-  return colorMap[category] || '#95a5a6';
+  return colorMap[category] || '#999999';
+}
+
+/**
+ * 复制到剪贴板
+ * @param {string} text - 要复制的文本
+ */
+function copyToClipboard(text) {
+  wx.setClipboardData({
+    data: text,
+    success() {
+      showToast('已复制到剪贴板', 'success');
+    },
+    fail() {
+      showToast('复制失败', 'error');
+    }
+  });
+}
+
+/**
+ * 显示提示信息
+ * @param {string} title - 标题
+ * @param {string} icon - 图标类型 (success, error, loading)
+ * @param {number} duration - 持续时间
+ */
+function showToast(title, icon = 'none', duration = 1500) {
+  wx.showToast({
+    title,
+    icon,
+    duration
+  });
+}
+
+/**
+ * 显示确认对话框
+ * @param {string} title - 标题
+ * @param {string} content - 内容
+ * @returns {Promise<boolean>}
+ */
+function showConfirm(title, content) {
+  return new Promise((resolve) => {
+    wx.showModal({
+      title,
+      content,
+      success(res) {
+        resolve(res.confirm);
+      },
+      fail() {
+        resolve(false);
+      }
+    });
+  });
+}
+
+/**
+ * 检查是否为空
+ * @param {*} value - 值
+ * @returns {boolean}
+ */
+function isEmpty(value) {
+  return value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0);
+}
+
+/**
+ * 生成随机字符串
+ * @param {number} length - 长度
+ * @returns {string}
+ */
+function generateRandomString(length = 16) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+/**
+ * 验证邮箱
+ * @param {string} email - 邮箱
+ * @returns {boolean}
+ */
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * 验证URL
+ * @param {string} url - URL
+ * @returns {boolean}
+ */
+function validateUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 module.exports = {
   formatDate,
-  getTimeDistance,
-  copyToClipboard,
-  showConfirm,
-  showLoading,
-  hideLoading,
-  showToast,
   checkPasswordStrength,
   isWeakPassword,
-  getDaysDiff,
   getCategoryName,
-  getCategoryColor
+  getCategoryColor,
+  copyToClipboard,
+  showToast,
+  showConfirm,
+  isEmpty,
+  generateRandomString,
+  validateEmail,
+  validateUrl
 };
