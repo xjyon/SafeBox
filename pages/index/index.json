@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "SafeBox",
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }
