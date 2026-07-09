@@ -1,0 +1,139 @@
+/**pages/edit/edit.wxss**/
+
+.page {
+  padding-bottom: 100px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+.input-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: flex-start;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0 12px;
+  min-height: 40px;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.input-wrapper textarea {
+  padding: 10px 0;
+  min-height: 80px;
+  resize: none;
+}
+
+.select-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 12px;
+  min-height: 40px;
+  font-size: 14px;
+}
+
+.placeholder {
+  color: #ccc;
+}
+
+.select-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+}
+
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 0 12px;
+  min-height: 40px;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.eye-icon {
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  opacity: 0.6;
+}
+
+.password-strength {
+  margin-top: 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  background-color: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.strength-text {
+  font-size: 12px;
+  display: block;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border-top: 1px solid #f0f0f0;
+}

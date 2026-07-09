@@ -1,0 +1,104 @@
+<!--pages/edit/edit.wxml-->
+<view class="page">
+  <view class="card">
+    <!-- 名称 -->
+    <view class="input-group">
+      <label class="input-label">名称 <text class="required">*</text></label>
+      <view class="input-wrapper">
+        <input 
+          type="text" 
+          placeholder="输入密码名称"
+          bindinput="onPasswordInput"
+          data-field="name"
+          value="{{passwordForm.name}}"
+        />
+      </view>
+    </view>
+
+    <!-- 分类 -->
+    <view class="input-group">
+      <label class="input-label">分类 <text class="required">*</text></label>
+      <view class="select-wrapper" bindtap="selectCategory">
+        <text class="{{!passwordForm.category ? 'placeholder' : ''}}">{{passwordForm.category ? getCategoryName(passwordForm.category) : '选择分类'}}</text>
+        <image src="/images/icon/arrow-down.png" class="select-icon"></image>
+      </view>
+    </view>
+
+    <!-- 账号 -->
+    <view class="input-group">
+      <label class="input-label">账号 <text class="required">*</text></label>
+      <view class="input-wrapper">
+        <input 
+          type="text" 
+          placeholder="输入账号或邮箱"
+          bindinput="onPasswordInput"
+          data-field="username"
+          value="{{passwordForm.username}}"
+        />
+      </view>
+    </view>
+
+    <!-- 密码 -->
+    <view class="input-group">
+      <label class="input-label">密码 <text class="required">*</text></label>
+      <view class="password-wrapper">
+        <input 
+          type="{{showPassword ? 'text' : 'password'}}"
+          placeholder="输入密码"
+          bindinput="onPasswordInput"
+          data-field="password"
+          value="{{passwordForm.password}}"
+        />
+        <image 
+          src="{{showPassword ? '/images/icon/eye-open.png' : '/images/icon/eye-close.png'}}"
+          class="eye-icon"
+          bindtap="toggleShowPassword"
+        ></image>
+      </view>
+      <view class="password-strength" wx:if="{{passwordForm.password}}">
+        <view class="strength-bar">
+          <view class="strength-fill" style="width: {{passwordStrength.score}}%; background-color: {{passwordStrength.score >= 80 ? '#27AE60' : passwordStrength.score >= 60 ? '#f39c12' : '#e74c3c'}}"></view>
+        </view>
+        <text class="strength-text" style="color: {{passwordStrength.score >= 80 ? '#27AE60' : passwordStrength.score >= 60 ? '#f39c12' : '#e74c3c'}}">{{passwordStrength.level}}</text>
+      </view>
+    </view>
+
+    <!-- 网址 -->
+    <view class="input-group">
+      <label class="input-label">网址</label>
+      <view class="input-wrapper">
+        <input 
+          type="text" 
+          placeholder="输入网址 (可选)"
+          bindinput="onPasswordInput"
+          data-field="website"
+          value="{{passwordForm.website}}"
+        />
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="input-group">
+      <label class="input-label">备注</label>
+      <view class="input-wrapper">
+        <textarea 
+          placeholder="输入备注信息 (可选)"
+          bindinput="onPasswordInput"
+          data-field="remark"
+          value="{{passwordForm.remark}}"
+          maxlength="200"
+        ></textarea>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
+    <button class="btn btn-primary btn-block" bindtap="savePassword">
+      保存修改
+    </button>
+    <button class="btn btn-secondary btn-block" bindtap="goBack">
+      取消
+    </button>
+  </view>
+</view>
