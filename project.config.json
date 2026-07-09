@@ -1,0 +1,56 @@
+{
+  "description": "SafeBox - 个人密码管理小程序",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "transformToNewRequire": false,
+    "useCompileModule": true,
+    "userConfirmedBundleSwitch": false,
+    "userConfirmedUseIsolatedEvaluateContext": false,
+    "maybeNeedToDecompress": false,
+    "lazyloadPlacementPercentage": 90,
+    "gzip": false,
+    "condition": false
+  },
+  "appid": "wx0000000000000000",
+  "projectname": "SafeBox",
+  "libVersion": "2.32.2",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "watchInputType": "fixWidth",
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "plugin": {
+      "current": -1,
+      "list": []
+    },
+    "gamePlugin": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": []
+    }
+  }
+}
