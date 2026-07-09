@@ -1,55 +1,57 @@
 // app.js
 App({
   onLaunch() {
-    // 初始化本地存储数据
-    this.initStorage();
+    // 初始化应用
+    this.initData();
   },
 
   /**
-   * 初始化本地存储
+   * 初始化数据
    */
-  initStorage() {
-    // 初始化密码列表
+  initData() {
+    // 从本地存储加载密码数据
     if (!wx.getStorageSync('passwordList')) {
       wx.setStorageSync('passwordList', []);
     }
   },
 
   /**
-   * 获取所有密码数据
+   * 获取密码列表
    */
   getPasswordList() {
     return wx.getStorageSync('passwordList') || [];
   },
 
   /**
-   * 保存密码数据
+   * 保存密码列表
    */
   savePasswordList(list) {
     wx.setStorageSync('passwordList', list);
   },
 
   /**
-   * 添加新密码
+   * 新增密码
    */
   addPassword(passwordData) {
     const list = this.getPasswordList();
-    const newItem = {
+    const newPassword = {
       id: this.generateId(),
-      name: passwordData.name,
-      category: passwordData.category,
-      username: passwordData.username,
-      password: passwordData.password,
-      website: passwordData.website || '',
-      remark: passwordData.remark || '',
-      images: passwordData.images || [],
+      ...passwordData,
       createTime: new Date().toISOString(),
       updateTime: new Date().toISOString(),
-      lastViewTime: null
+      images: passwordData.images || []
     };
-    list.push(newItem);
+    list.push(newPassword);
     this.savePasswordList(list);
-    return newItem;
+    return newPassword;
+  },
+
+  /**
+   * 获取密码详情
+   */
+  getPasswordById(id) {
+    const list = this.getPasswordList();
+    return list.find(item => item.id === id);
   },
 
   /**
@@ -80,15 +82,34 @@ App({
   },
 
   /**
-   * 获取单个密码详情
+   * 搜索密码
    */
-  getPasswordById(id) {
+  searchPassword(keyword) {
     const list = this.getPasswordList();
-    return list.find(item => item.id === id) || null;
+    return list.filter(item =>
+      item.name.includes(keyword) ||
+      item.username.includes(keyword) ||
+      item.website.includes(keyword) ||
+      item.remark.includes(keyword)
+    );
   },
 
   /**
-   * 更新最近访问时间
+   * 获取最近访问列表
+   */
+  getRecentViewList(limit = 5) {
+    const list = this.getPasswordList();
+    // 按最后访问时间排序
+    const sorted = list.sort((a, b) => {
+      const timeA = a.lastViewTime ? new Date(a.lastViewTime).getTime() : 0;
+      const timeB = b.lastViewTime ? new Date(b.lastViewTime).getTime() : 0;
+      return timeB - timeA;
+    });
+    return sorted.filter(item => item.lastViewTime).slice(0, limit);
+  },
+
+  /**
+   * 更新最后访问时间
    */
   updateLastViewTime(id) {
     const list = this.getPasswordList();
@@ -100,52 +121,20 @@ App({
   },
 
   /**
-   * 生成唯一ID
-   */
-  generateId() {
-    return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  },
-
-  /**
-   * 搜索密码
-   */
-  searchPassword(keyword) {
-    const list = this.getPasswordList();
-    if (!keyword) return list;
-
-    const lowerKeyword = keyword.toLowerCase();
-    return list.filter(item => 
-      item.name.toLowerCase().includes(lowerKeyword) ||
-      item.username.toLowerCase().includes(lowerKeyword) ||
-      item.website.toLowerCase().includes(lowerKeyword) ||
-      item.remark.toLowerCase().includes(lowerKeyword)
-    );
-  },
-
-  /**
-   * 按分类筛选
-   */
-  filterByCategory(category) {
-    const list = this.getPasswordList();
-    if (!category) return list;
-    return list.filter(item => item.category === category);
-  },
-
-  /**
-   * 获取最近访问记录
-   */
-  getRecentViewList(limit = 5) {
-    const list = this.getPasswordList();
-    return list
-      .filter(item => item.lastViewTime)
-      .sort((a, b) => new Date(b.lastViewTime) - new Date(a.lastViewTime))
-      .slice(0, limit);
-  },
-
-  /**
    * 清空所有数据
    */
   clearAllData() {
     wx.setStorageSync('passwordList', []);
+  },
+
+  /**
+   * 生成唯一ID
+   */
+  generateId() {
+    return 'pwd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  },
+
+  globalData: {
+    userInfo: null
   }
 });

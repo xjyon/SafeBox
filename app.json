@@ -4,6 +4,7 @@
     "pages/manage/manage",
     "pages/add/add",
     "pages/detail/detail",
+    "pages/edit/edit",
     "pages/security/security",
     "pages/mine/mine"
   ],
@@ -11,46 +12,40 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#27AE60",
     "navigationBarTitleText": "SafeBox",
-    "navigationBarTextStyle": "white"
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f5f5"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#27AE60",
-    "backgroundColor": "#ffffff",
     "borderStyle": "black",
+    "position": "bottom",
+    "selectedColor": "#27AE60",
+    "color": "#999999",
+    "backgroundColor": "#ffffff",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "images/tabbar/home.png",
-        "selectedIconPath": "images/tabbar/home-active.png"
+        "iconPath": "/images/icon/home.png",
+        "selectedIconPath": "/images/icon/home-active.png"
       },
       {
         "pagePath": "pages/manage/manage",
         "text": "管理",
-        "iconPath": "images/tabbar/manage.png",
-        "selectedIconPath": "images/tabbar/manage-active.png"
-      },
-      {
-        "pagePath": "pages/add/add",
-        "text": "新增",
-        "iconPath": "images/tabbar/add.png",
-        "selectedIconPath": "images/tabbar/add-active.png"
+        "iconPath": "/images/icon/manage.png",
+        "selectedIconPath": "/images/icon/manage-active.png"
       },
       {
         "pagePath": "pages/security/security",
         "text": "安全",
-        "iconPath": "images/tabbar/security.png",
-        "selectedIconPath": "images/tabbar/security-active.png"
+        "iconPath": "/images/icon/security.png",
+        "selectedIconPath": "/images/icon/security-active.png"
       },
       {
         "pagePath": "pages/mine/mine",
         "text": "我的",
-        "iconPath": "images/tabbar/mine.png",
-        "selectedIconPath": "images/tabbar/mine-active.png"
+        "iconPath": "/images/icon/mine.png",
+        "selectedIconPath": "/images/icon/mine-active.png"
       }
     ]
-  },
-  "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  }
 }
