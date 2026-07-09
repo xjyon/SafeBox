@@ -1,0 +1,114 @@
+<!--pages/security/security.wxml-->
+<view class="page">
+  <!-- 安全三下 -->
+  <view class="security-overview">
+    <view class="security-score">
+      <view class="score-number">{{securityScore}}</view>
+      <view class="score-label">安全评分</view>
+    </view>
+    <view class="score-description" style="color: {{securityScore >= 80 ? '#27AE60' : securityScore >= 60 ? '#f39c12' : '#e74c3c'}};">
+      {{getSecurityLevel(securityScore)}}
+    </view>
+  </view>
+
+  <!-- 检测结果卡片 -->
+  <view class="card">
+    <view class="card-header">检测结果</view>
+
+    <!-- 密码总数 -->
+    <view class="result-item">
+      <view class="result-icon" style="background-color: #3498db;">{{ passwordCount }}</view>
+      <view class="result-content">
+        <view class="result-title">密码总数</view>
+        <view class="result-desc">共{{ passwordCount }}条密码记录</view>
+      </view>
+    </view>
+
+    <!-- 弱密码检测 -->
+    <view class="result-item {{weakPasswordCount > 0 ? 'warning' : 'success'}}">
+      <view class="result-icon {{weakPasswordCount > 0 ? 'warning-bg' : 'success-bg'}}">
+        <view class="icon-text">{{ weakPasswordCount }}</view>
+      </view>
+      <view class="result-content">
+        <view class="result-title">弱密码</view>
+        <view class="result-desc">{{ weakPasswordCount > 0 ? '检测到' + weakPasswordCount + '个弱密码' : '没有弱密码，执探哨' }}</view>
+      </view>
+      <image src="/images/icon/arrow-right.png" class="arrow-icon" wx:if="{{weakPasswordCount > 0}}"></image>
+    </view>
+
+    <!-- 重复密码检测 -->
+    <view class="result-item {{duplicatePasswordCount > 0 ? 'warning' : 'success'}}">
+      <view class="result-icon {{duplicatePasswordCount > 0 ? 'warning-bg' : 'success-bg'}}">
+        <view class="icon-text">{{ duplicatePasswordCount }}</view>
+      </view>
+      <view class="result-content">
+        <view class="result-title">重复密码</view>
+        <view class="result-desc">{{ duplicatePasswordCount > 0 ? '检测到' + duplicatePasswordCount + '个重复密码' : '没有使用重复密码' }}</view>
+      </view>
+      <image src="/images/icon/arrow-right.png" class="arrow-icon" wx:if="{{duplicatePasswordCount > 0}}"></image>
+    </view>
+
+    <!-- 需要更新的密码 -->
+    <view class="result-item {{needUpdateCount > 0 ? 'warning' : 'success'}}">
+      <view class="result-icon {{needUpdateCount > 0 ? 'warning-bg' : 'success-bg'}}">
+        <view class="icon-text">{{ needUpdateCount }}</view>
+      </view>
+      <view class="result-content">
+        <view class="result-title">需要更新</view>
+        <view class="result-desc">{{ needUpdateCount > 0 ? '检测到' + needUpdateCount + '个需要更新的密码' : '所有密码都是最近更新的' }}</view>
+      </view>
+      <image src="/images/icon/arrow-right.png" class="arrow-icon" wx:if="{{needUpdateCount > 0}}"></image>
+    </view>
+  </view>
+
+  <!-- 详细列表 -->
+  <view class="card" wx:if="{{showDetailList.length > 0}}">
+    <view class="card-header">问题详数</view>
+    <view class="list">
+      <view 
+        wx:for="{{showDetailList}}" 
+        wx:key="id"
+        class="list-item"
+        data-id="{{item.id}}"
+        bindtap="goToDetail"
+      >
+        <view class="list-item-left">
+          <view class="list-item-title">{{item.name}}</view>
+          <view class="list-item-desc">
+            <text class="badge {{item.type === 'weak' ? 'badge-danger' : item.type === 'duplicate' ? 'badge-warning' : 'badge-warning'}}">{{item.typeName}}</text>
+          </view>
+        </view>
+        <image src="/images/icon/arrow-right.png" class="arrow-icon"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 安全建议 -->
+  <view class="card">
+    <view class="card-header">安全建议</view>
+    <view class="advice-item">
+      <view class="advice-number">1</view>
+      <view class="advice-content">
+        <view class="advice-title">定期更新密码</view>
+        <view class="advice-desc">建议每3个月更新一次密码</view>
+      </view>
+    </view>
+    <view class="advice-item">
+      <view class="advice-number">2</view>
+      <view class="advice-content">
+        <view class="advice-title">不要使用简单密码</view>
+        <view class="advice-desc">应该使用至小12位混合大小写字母、数字和特殊符号</view>
+      </view>
+    </view>
+    <view class="advice-item">
+      <view class="advice-number">3</view>
+      <view class="advice-content">
+        <view class="advice-title">不要重复使用密码</view>
+        <view class="advice-desc">为不同的账户使用不同的密码</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部空白 -->
+  <view style="height: 40px;"></view>
+</view>
