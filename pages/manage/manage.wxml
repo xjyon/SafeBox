@@ -1,0 +1,71 @@
+<!--pages/manage/manage.wxml-->
+<view class="page">
+  <!-- 搜索和筛选栏 -->
+  <view class="filter-bar">
+    <view class="search-box-small">
+      <image src="/images/icon/search.png" class="search-icon-small"></image>
+      <input 
+        type="text" 
+        placeholder="搜索密码..."
+        bindinput="onSearchInput"
+        value="{{searchValue}}"
+      />
+    </view>
+    <view class="filter-btn" bindtap="showCategoryFilter">
+      <image src="/images/icon/filter.png" class="filter-icon"></image>
+    </view>
+  </view>
+
+  <!-- 分类标签栏 -->
+  <view class="category-tabs">
+    <view 
+      wx:for="{{categoryTabs}}" 
+      wx:key="id"
+      class="category-tab {{filterCategory === item.id ? 'active' : ''}}"
+      bindtap="selectCategory"
+      data-category="{{item.id}}"
+    >
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- 密码列表 -->
+  <view wx:if="{{displayList.length > 0}}" class="list">
+    <view 
+      wx:for="{{displayList}}" 
+      wx:key="id"
+      class="list-item"
+      data-id="{{item.id}}"
+      bindtap="goToDetail"
+    >
+      <view class="list-item-left">
+        <view class="list-item-title">{{item.name}}</view>
+        <view class="list-item-desc">
+          <text>{{item.username}}</text>
+          <text class="divider">·</text>
+          <text>{{formatTime(item.updateTime)}}</text>
+        </view>
+      </view>
+      <view class="list-item-right">
+        <view class="badge badge-primary">{{getCategoryName(item.category)}}</view>
+        <image src="/images/icon/arrow-right.png" class="arrow-icon"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty-state">
+    <text class="empty-state-icon">📭</text>
+    <text class="empty-state-text">暂无密码记录</text>
+    <button class="btn btn-primary" bindtap="goToAdd" style="margin-top: 16px;">
+      立即添加
+    </button>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-action" wx:if="{{displayList.length > 0}}">
+    <button class="btn btn-primary btn-block" bindtap="goToAdd">
+      + 新增密码
+    </button>
+  </view>
+</view>
