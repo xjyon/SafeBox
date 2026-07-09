@@ -1,0 +1,112 @@
+<!--pages/detail/detail.wxml-->
+<view class="page">
+  <view wx:if="{{passwordData}}" class="detail-container">
+    <!-- 顶部操作栏 -->
+    <view class="detail-header">
+      <view class="detail-title">{{passwordData.name}}</view>
+      <view class="detail-category" style="background-color: {{getCategoryColor(passwordData.category)}};">{{getCategoryName(passwordData.category)}}</view>
+    </view>
+
+    <!-- 详情卡片 -->
+    <view class="card">
+      <!-- 账号 -->
+      <view class="detail-item">
+        <view class="detail-label">账号</view>
+        <view class="detail-value-group">
+          <view class="detail-value">{{passwordData.username}}</view>
+          <image src="/images/icon/copy.png" class="copy-icon" bindtap="copyUsername" data-value="{{passwordData.username}}"></image>
+        </view>
+      </view>
+
+      <!-- 密码 -->
+      <view class="detail-item">
+        <view class="detail-label">密码</view>
+        <view class="detail-value-group">
+          <view class="detail-value">{{showPassword ? passwordData.password : '••••••••'}}</view>
+          <view class="password-actions">
+            <image src="/images/icon/copy.png" class="copy-icon" bindtap="copyPassword" data-value="{{passwordData.password}}"></image>
+            <image 
+              src="{{showPassword ? '/images/icon/eye-open.png' : '/images/icon/eye-close.png'}}" 
+              class="eye-icon"
+              bindtap="toggleShowPassword"
+            ></image>
+          </view>
+        </view>
+      </view>
+
+      <!-- 网址 -->
+      <view class="detail-item" wx:if="{{passwordData.website}}">
+        <view class="detail-label">网址</view>
+        <view class="detail-value-group">
+          <view class="detail-value">{{passwordData.website}}</view>
+          <image src="/images/icon/copy.png" class="copy-icon" bindtap="copyWebsite" data-value="{{passwordData.website}}"></image>
+        </view>
+      </view>
+
+      <!-- 备注 -->
+      <view class="detail-item" wx:if="{{passwordData.remark}}">
+        <view class="detail-label">备注</view>
+        <view class="detail-value">{{passwordData.remark}}</view>
+      </view>
+
+      <!-- 时间信息 -->
+      <view class="detail-item">
+        <view class="detail-label">创建时间</view>
+        <view class="detail-value" style="font-size: 12px; color: #999;">{{formatDate(passwordData.createTime)}}</view>
+      </view>
+
+      <view class="detail-item">
+        <view class="detail-label">更新时间</view>
+        <view class="detail-value" style="font-size: 12px; color: #999;">{{formatDate(passwordData.updateTime)}}</view>
+      </view>
+
+      <!-- 密码强度 -->
+      <view class="detail-item" wx:if="{{passwordStrength}}">
+        <view class="detail-label">密码强度</view>
+        <view class="strength-display">
+          <view class="strength-bar">
+            <view class="strength-fill" style="width: {{passwordStrength.score}}%; background-color: {{passwordStrength.score >= 80 ? '#27AE60' : passwordStrength.score >= 60 ? '#f39c12' : '#e74c3c'}}"></view>
+          </view>
+          <text class="strength-text" style="color: {{passwordStrength.score >= 80 ? '#27AE60' : passwordStrength.score >= 60 ? '#f39c12' : '#e74c3c'}}">{{passwordStrength.level}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 图片附件 -->
+    <view class="card" wx:if="{{passwordData.images && passwordData.images.length > 0}}">
+      <view class="card-header">图片附件 ({{passwordData.images.length}})</view>
+      <view class="image-gallery">
+        <view 
+          wx:for="{{passwordData.images}}" 
+          wx:key="index"
+          class="gallery-item"
+          bindtap="previewImage"
+          data-urls="{{passwordData.images}}"
+          data-current="{{index}}"
+        >
+          <image src="{{item}}" class="gallery-image"></image>
+          <image src="/images/icon/delete.png" class="delete-btn" bindtap="deleteImage" data-index="{{index}}"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-primary btn-block" bindtap="editPassword">
+        编辑
+      </button>
+      <button class="btn btn-danger btn-block" bindtap="deletePassword">
+        删除
+      </button>
+    </view>
+
+    <!-- 底部空白 -->
+    <view style="height: 40px;"></view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:else class="empty-state">
+    <text class="empty-state-icon">⏳</text>
+    <text class="empty-state-text">加载中...</text>
+  </view>
+</view>
